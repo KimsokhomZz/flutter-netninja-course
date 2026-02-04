@@ -6,8 +6,15 @@ void main() {
   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: KaizenCard()));
 }
 
-class KaizenCard extends StatelessWidget {
+class KaizenCard extends StatefulWidget {
   const KaizenCard({super.key});
+
+  @override
+  State<KaizenCard> createState() => _KaizenCardState();
+}
+
+class _KaizenCardState extends State<KaizenCard> {
+  int ninjaLevel = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +27,15 @@ class KaizenCard extends StatelessWidget {
         foregroundColor: Colors.white,
         elevation: 0.0,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            ninjaLevel += 1;
+          });
+        },
+        backgroundColor: Colors.amber[600],
+        child: Icon(Icons.add),
+      ),
       body: Padding(
         padding: EdgeInsets.fromLTRB(30, 40, 30, 0),
         child: Column(
@@ -31,10 +47,7 @@ class KaizenCard extends StatelessWidget {
                 radius: 40.0,
               ),
             ),
-            Divider(
-              height: 60.0,
-              color: Colors.grey[800],
-            ),
+            Divider(height: 60.0, color: Colors.grey[800]),
             Text(
               'NAME',
               style: GoogleFonts.lato(
@@ -64,7 +77,7 @@ class KaizenCard extends StatelessWidget {
             ),
             SizedBox(height: 5.0),
             Text(
-              '9',
+              '$ninjaLevel',
               style: TextStyle(
                 color: Colors.amberAccent[400],
                 letterSpacing: 2.0,
