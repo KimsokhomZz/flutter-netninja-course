@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'quote.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(Home());
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: QuoteList()));
 }
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class QuoteList extends StatefulWidget {
+  const QuoteList({super.key});
+
+  @override
+  State<QuoteList> createState() => _QuoteListState();
+}
+
+class _QuoteListState extends State<QuoteList> {
+  List<Quote> quotes = [
+    Quote(text: 'Be yourself; everyone else is already taken', author: 'Oscar Wilde'),
+    Quote(text: 'A room without books is like a body without a soul', author: 'Marcus Tullius Cicero'),
+    Quote(text: 'You only live once, but if you do it right, once is enough', author: 'Mae West'),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('My First Flutter App with Google Fonts'),
-          centerTitle: true,
-          backgroundColor: Colors.purpleAccent,
-        ),
-        body: Center(
-          child: FilledButton.tonalIcon(
-            onPressed: () {
-              print("Button Clicked");
-            },
-            label: Text("Click Me"),
-            icon: Icon(Icons.thumb_up),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Colors.purpleAccent,
-          child: Text('click'),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        title: Text('Awsome Quotes'),
+        centerTitle: true,
+        backgroundColor: Colors.redAccent,
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: quotes.map((quote) => Text('${quote.text} - ${quote.author}')).toList(),
       ),
     );
   }
