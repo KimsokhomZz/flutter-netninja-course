@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'quote.dart';
+import 'quote_card.dart';
 
 void main() {
   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: QuoteList()));
@@ -14,9 +15,18 @@ class QuoteList extends StatefulWidget {
 
 class _QuoteListState extends State<QuoteList> {
   List<Quote> quotes = [
-    Quote(text: 'Be yourself; everyone else is already taken', author: 'Oscar Wilde'),
-    Quote(text: 'A room without books is like a body without a soul', author: 'Marcus Tullius Cicero'),
-    Quote(text: 'You only live once, but if you do it right, once is enough', author: 'Mae West'),
+    Quote(
+      text: 'Be yourself; everyone else is already taken',
+      author: 'Oscar Wilde',
+    ),
+    Quote(
+      text: 'A room without books is like a body without a soul',
+      author: 'Marcus Tullius Cicero',
+    ),
+    Quote(
+      text: 'You only live once, but if you do it right, once is enough',
+      author: 'Mae West',
+    ),
   ];
 
   @override
@@ -30,7 +40,19 @@ class _QuoteListState extends State<QuoteList> {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: quotes.map((quote) => Text('${quote.text} - ${quote.author}')).toList(),
+        children:
+            quotes
+                .map(
+                  (quote) => QuoteCard(
+                    quote: quote,
+                    onDelte: () {
+                      setState(() {
+                        quotes.remove(quote);
+                      });
+                    },
+                  ),
+                )
+                .toList(),
       ),
     );
   }
