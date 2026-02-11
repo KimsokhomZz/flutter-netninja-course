@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class WorldTime {
   String location; // location name for the UI
@@ -13,23 +14,30 @@ class WorldTime {
     required this.urlEndpoint,
   });
   Future<void> getCambodiaTime() async {
-    // Make request to API
-    String url = 'https://time.now/developer/api/timezone/$urlEndpoint';
-    http.Response response = await http.get(Uri.parse(url));
-    Map data = jsonDecode(response.body);
+    try {
+      // Make request to API
+      String url = 'https://time.now/developer/api/timezone/$urlEndpoint';
+      http.Response response = await http.get(Uri.parse(url));
 
-    // Get property from data
-    String datatime = data['datetime'];
-    String offset = data['utc_offset'].substring(1, 3);
-    // print('Datatime: $datatime');
-    // print('Offset: $offset');
+      if (response.statusCode == 200) {
+        Map data = jsonDecode(response.body);
 
-    // Create DataTime object
-    DateTime now = DateTime.parse(datatime);
-    now = now.add(Duration(hours: int.parse(offset)));
-    // print('Cambodia Time: $now');
+        // Get property from data
+        String datatime = data['datetime'];
+        String offset = data['utc_offset'].substring(1, 3);
 
-    // Set the time property
-    time = now.toString();
+        // Create DataTime object
+        DateTime now = DateTime.parse(datatime);
+        now = now.add(Duration(hours: int.parse(offset)));
+
+        // Set the time property
+        time = DateFormat.jm().format(now);
+      } else {
+        time = 'Request error: ${response.statusCode}';
+      }
+    } catch (e) {
+      print('Error is : $e');
+      time = 'Could not get time data';
+    }
   }
 }

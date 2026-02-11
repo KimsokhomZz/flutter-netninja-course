@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_first_flutter_app/services/world_time.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -9,9 +10,13 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  String time = 'loading...';
+  @override
+  void initState() {
+    super.initState();
+    setCambodiaTime();
+  }
 
-  void setCambodiaTime() async {
+  Future<void> setCambodiaTime() async {
     WorldTime instance = WorldTime(
       location: 'Phnom Penh',
       flag: 'cambodia.png',
@@ -19,22 +24,24 @@ class _LoadingState extends State<Loading> {
     );
 
     await instance.getCambodiaTime();
-    print(instance.time);
 
-    // set time
-    setState(() {
-      time = instance.time;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setCambodiaTime();
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(
+      context,
+      '/home',
+      arguments: {
+        'location': instance.location,
+        'flag': instance.flag,
+        'time': instance.time,
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text(time)));
+    return Scaffold(
+      backgroundColor: Colors.amberAccent,
+      body: Center(child: SpinKitThreeBounce(color: Colors.white, size: 40.0)),
+    );
   }
 }
