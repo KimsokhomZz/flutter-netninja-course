@@ -9,20 +9,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Map<String, dynamic> data = {};
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    if (arguments != null) {
-      data = arguments;
-    }
-  }
+  bool _isInit = false;
 
   @override
   Widget build(BuildContext context) {
+    if (!_isInit) {
+      final arguments =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      if (arguments != null) {
+        data = arguments;
+      }
+      _isInit = true;
+    }
     print(data);
 
     String bgImage = (data['isDaytime'] ?? true) ? 'day.png' : 'night.png';
@@ -48,8 +46,16 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: [
                   TextButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/location');
+                    onPressed: () async {
+                      dynamic result = await Navigator.pushNamed(
+                        context,
+                        '/location',
+                      );
+                      if (result != null) {
+                        setState(() {
+                          data = result;
+                        });
+                      }
                     },
                     icon: Icon(Icons.edit_location),
                     label: Text('Choose Location'),
@@ -79,7 +85,7 @@ class _HomeState extends State<Home> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: bgColor,
                       foregroundColor: textColor,
-                    )
+                    ),
                   ),
                 ],
               ),

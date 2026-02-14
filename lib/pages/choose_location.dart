@@ -11,7 +11,11 @@ class ChooseLocation extends StatefulWidget {
 
 class _ChooseLocationState extends State<ChooseLocation> {
   List<WorldTime> locations = [
-    WorldTime(urlEndpoint: 'Asia/Phnom_Penh', location: 'Phnom Penh', flag: 'cambodia.png'),
+    WorldTime(
+      urlEndpoint: 'Asia/Phnom_Penh',
+      location: 'Phnom Penh',
+      flag: 'cambodia.png',
+    ),
     WorldTime(urlEndpoint: 'Europe/London', location: 'London', flag: 'uk.png'),
     WorldTime(
       urlEndpoint: 'Europe/Berlin',
@@ -50,6 +54,19 @@ class _ChooseLocationState extends State<ChooseLocation> {
     ),
   ];
 
+  void updateTime(index) async {
+    WorldTime instance = locations[index];
+    await instance.getCambodiaTime();
+    // Navigate to home screen
+    Navigator.pop(context, {
+      'location': instance.location,
+      'flag': instance.flag,
+      'time': instance.time,
+      'urlEndpoint': instance.urlEndpoint,
+      'isDaytime': instance.isDaytime,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,10 +86,12 @@ class _ChooseLocationState extends State<ChooseLocation> {
             child: Card(
               child: ListTile(
                 onTap: () {
-                  print(locations[index].location);
+                  updateTime(index);
                 },
                 leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/${locations[index].flag}'),
+                  backgroundImage: AssetImage(
+                    'assets/${locations[index].flag}',
+                  ),
                 ),
                 title: Text(locations[index].location),
                 trailing: const Icon(Icons.more_vert),
